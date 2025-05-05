@@ -1,0 +1,50 @@
+services:
+  # zigchain-node:
+  #   image: zigchain-node:latest
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: zigchain-node
+  #   #volumes:
+  #   #  - ~/.zigchaind:/root/.zigchaind
+  #   #command: ["/bin/sh", "-c", "while true; do sleep 1000; done"]
+  #   command: ["/bin/sh", "-c", "/usr/local/bin/zigchaind start"]
+
+  dev:
+    image: zigchain-node:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: zigchain-dev
+    container_name: zigchain-dev
+    volumes:
+      - .:/workspace
+    command: sleep infinity
+
+  zigchain-local:
+    image: zigchain-node:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: zigchain-base
+    container_name: zigchain-local
+    profiles: ["local"]
+    restart: no
+    ports:
+      - "${LOCAL_RPC_PORT:-26657}:26657"   # solo RPC
+    #volumes:
+    #  - ./local_data:/root/.zigchain
+    command: ["/bin/sh", "-c", "zigchaind start"]
+
+
+  zignchain-testnet-node:
+    image: zigchain-node:latest
+    container_name: zigchain-testnet-node
+    profiles: ["testnet"]
+    restart: no
+    ports:
+      - "${TESTNET_P2P_PORT:-26656}:26656"   # p2p
+      - "${TESTNER_RPC_PORT:-26657}:26657"   # RPC
+    #volumes:
+    #  - ./testnet_data:/root/.zigchain
+    command: ["/bin/sh", "-c", "zigchaind start"]
