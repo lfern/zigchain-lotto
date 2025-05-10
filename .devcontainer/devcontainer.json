@@ -5,6 +5,11 @@
     "workspaceFolder": "/workspace",
     "customizations": {
         "vscode": {
+            "extensions": [
+                "rust-lang.rust-analyzer",
+                "tamasfe.even-better-toml",
+                "fill-labs.dependi"
+            ],
             "settings": {
                 "terminal.integrated.defaultProfile.linux": "bash"
               }          

@@ -1,4 +1,4 @@
-FROM golang:1.23.6 as zigchain-base
+FROM golang:1.23.6 AS zigchain-base
 
 # Install dependencies
 RUN apt-get update && apt-get install -y wget jq && rm -rf /var/lib/apt/lists/*
@@ -34,15 +34,30 @@ RUN chmod +x /usr/local/bin/zigchain_local_setup2.sh && /usr/local/bin/zigchain_
 ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/zigchaind start"]
 
 
-FROM zigchain-base as zigchain-dev
+FROM zigchain-base AS zigchain-dev
 # Install Rust toolchain + wasm target
 RUN apt-get update && apt-get install -y curl build-essential git && \
     curl https://sh.rustup.rs -sSf | sh -s -- -y && \
     . "/root/.cargo/env" && \
+    rustup install stable && \
+    rustup install 1.81 && \
+    rustup default stable && \
     rustup target add wasm32-unknown-unknown && \
     cargo install cargo-generate --features vendored-openssl && \
+    cargo install cosmwasm-check && \
     cargo install wasm-pack && \
-    rustc --version && cargo --version && wasm-pack --version
+    cargo install cargo-tarpaulin && \
+    cargo install cargo-nextest && \
+    rustc --version && \
+    cargo --version && \
+    wasm-pack --version && \
+    cosmwasm-check --version
+
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+WORKDIR /workspace
+
+CMD ["/bin/bash"]
 
 
 ENV PATH="/root/.cargo/bin:${PATH}"

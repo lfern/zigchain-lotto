@@ -1,0 +1,45 @@
+[package]
+name = "zigchain-lottery"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+#cosmwasm-std = "1.1.0"
+cw2 = "2.0.0"
+cw-storage-plus = { version = "2.0.0", features = ["iterator"] } 
+#serde = { version = "1.0", features = ["derive"] }  
+#cosmwasm-schema = "1.1.1" 
+#schemars = "0.8.11"      
+cosmwasm-std = { version = "2.2.2", features = ["staking"] }
+# sylvia = "1.1.0"
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+cw-storey = "0.5.0"
+thiserror = "2.0.12"
+cw-utils = "2.0.0"
+schemars = "0.8.21"
+cosmwasm-schema = "2.1.4"
+ 
+[dev-dependencies]
+cw-multi-test = "2.2.0"
+
+[features]
+# use library feature to disable all instantiate/execute/query exports
+library = []
+
+[profile.dev]
+lto = "thin"
+strip = true
+
+[profile.release]
+codegen-units = 1
+incremental = false
+
+rpath = false
+lto = true
+overflow-checks = true
+opt-level = 3
+debug = false
+debug-assertions = false
